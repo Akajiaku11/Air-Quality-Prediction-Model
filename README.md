@@ -1,3 +1,18 @@
-# Air-Quality-Prediction-Model
-This Python-based project leverages machine learning to predict air quality levels using synthetic pollutant data, simulating real-world air quality monitoring for various pollutants.
-The Air Quality Prediction application forecasts air quality metrics based on past data for critical pollutants, including CO₂, NO₂, SO₂, and PM2.5. By using a machine learning model, this project enables users to gain insights into air quality trends and predict future AQI (Air Quality Index) values, which are essential for environmental health monitoring.
+# Air Quality Prediction Project
+
+This project uses synthetic air quality data to train a Random Forest model to predict AQI (Air Quality Index) for various pollutants.
+
+## Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/air-quality-prediction.git
+   ```
+2. Install the required libraries:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Usage
+Run the main script:
+```bash
+python main.py

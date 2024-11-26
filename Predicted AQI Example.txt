@@ -1,0 +1,16 @@
+
+---
+
+### 2. **`requirements.txt`**
+- **Purpose**: Lists all Python dependencies for easy installation.
+- **Content**: Output from `pip freeze` or a manually curated list of dependencies.
+- Example:
+  ```
+  numpy==1.23.5
+  pandas==1.5.3
+  scikit-learn==1.2.3
+  ```
+
+Generate automatically:
+```bash
+pip freeze > requirements.txt
