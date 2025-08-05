@@ -97,8 +97,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Contact
 If you have any questions or suggestions, feel free to reach out:
 
-- **Name**: Desmond Eteh
-- **Email**: desmondeteh@gmail.com
-- **GitHub**: [Eteh1](https://github.com/Eteh1)
+- **Name**: akajiaku Charles 
+- **Email**: akajiakuflowz@gmail.com 
+- **GitHub**: [Akajiaku11](https://github.com/Akajiaku11)
 
 Thank you for visiting the Air Quality Prediction Model repository! We hope this project helps you in your efforts to monitor and improve air quality.
