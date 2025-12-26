@@ -1,0 +1,63 @@
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+def make_air_quality_sample(n: int = 50, seed: int = 42) -> pd.DataFrame:
+    rng = np.random.default_rng(seed)
+
+    # Basic met features (reasonable ranges)
+    temperature = rng.normal(loc=28, scale=4.5, size=n).clip(10, 45)   # °C
+    humidity = rng.normal(loc=70, scale=12, size=n).clip(20, 98)      # %
+    wind_speed = rng.normal(loc=2.5, scale=1.2, size=n).clip(0, 10)   # m/s
+
+    # Pollutants (rough plausible ranges for many urban contexts)
+    PM10 = rng.normal(loc=70, scale=30, size=n).clip(5, 250)          # µg/m³
+    NO2 = rng.normal(loc=35, scale=15, size=n).clip(1, 120)           # ppb
+    SO2 = rng.normal(loc=10, scale=6, size=n).clip(0.5, 60)           # ppb
+    CO = rng.normal(loc=0.8, scale=0.35, size=n).clip(0.1, 3.5)       # ppm
+    O3 = rng.normal(loc=25, scale=12, size=n).clip(1, 120)            # ppb
+
+    # Build target PM2.5 (synthetic relationship + noise)
+    # Note: This is synthetic. Replace with real data when available.
+    noise = rng.normal(loc=0, scale=6, size=n)
+    PM2_5 = (
+        0.55 * PM10
+        + 0.20 * NO2
+        + 0.12 * O3
+        + 0.08 * SO2
+        + 8 * CO
+        - 0.25 * wind_speed
+        + 0.03 * humidity
+        - 0.10 * temperature
+        + noise
+    ).clip(2, 200)
+
+    df = pd.DataFrame({
+        "PM10": np.round(PM10, 2),
+        "NO2": np.round(NO2, 2),
+        "SO2": np.round(SO2, 2),
+        "CO": np.round(CO, 3),
+        "O3": np.round(O3, 2),
+        "temperature": np.round(temperature, 2),
+        "humidity": np.round(humidity, 2),
+        "wind_speed": np.round(wind_speed, 2),
+        "PM2.5": np.round(PM2_5, 2),   # target column
+    })
+
+    return df
+
+def main():
+    project_dir = Path(__file__).resolve().parents[1]
+    out_dir = project_dir / "data" / "raw"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    out_path = out_dir / "air_quality.csv"
+    df = make_air_quality_sample(n=50, seed=42)
+    df.to_csv(out_path, index=False)
+
+    print("✅ Sample dataset created")
+    print(f"Saved -> {out_path}")
+    print(df.head(5).to_string(index=False))
+
+if __name__ == "__main__":
+    main()
