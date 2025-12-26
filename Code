@@ -1,0 +1,52 @@
+import joblib
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
+from src.config import DEFAULT_DATA_FILE, MODEL_FILE, TARGET_COL, RANDOM_STATE
+from src.data_prep import load_data, basic_clean
+from src.features import split_xy, drop_non_numeric
+
+def train(csv_path: str | None = None):
+    path = csv_path or str(DEFAULT_DATA_FILE)
+    df = basic_clean(load_data(path))
+
+    X, y = split_xy(df, TARGET_COL)
+    X = drop_non_numeric(X)
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=RANDOM_STATE
+    )
+
+    model = Pipeline(steps=[
+        ("imputer", SimpleImputer(strategy="median")),
+        ("scaler", StandardScaler()),
+        ("rf", RandomForestRegressor(
+            n_estimators=300,
+            random_state=RANDOM_STATE,
+            n_jobs=-1
+        ))
+    ])
+
+    model.fit(X_train, y_train)
+    preds = model.predict(X_test)
+
+    mae = mean_absolute_error(y_test, preds)
+    rmse = mean_squared_error(y_test, preds) ** 0.5
+    r2 = r2_score(y_test, preds)
+
+    MODEL_FILE.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(model, MODEL_FILE)
+
+    print("✅ Training complete")
+    print(f"Saved model -> {MODEL_FILE}")
+    print(f"MAE:  {mae:.4f}")
+    print(f"RMSE: {rmse:.4f}")
+    print(f"R2:   {r2:.4f}")
+
+if __name__ == "__main__":
+    train()
